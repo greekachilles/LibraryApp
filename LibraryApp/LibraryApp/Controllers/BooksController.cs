@@ -19,10 +19,43 @@ namespace LibraryApp.Controllers
         }
 
         // GET: Books
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString, string catChoice)
+
         {
-            var libraryApplicationDBContext = _context.Book.Include(b => b.Borrower);
-            return View(await libraryApplicationDBContext.ToListAsync());
+            ViewData["CurrentFilter"] = searchString;
+
+
+            ViewBag.avail = new SelectList(new[]
+           {
+                new{id="",name="All books"},
+                new {id="A", name="Available books"},
+                new{id="U", name="Unavailable books"},
+            },
+           "id", "name", catChoice);
+
+
+            var books = _context.Book
+                        .Include(b => b.Borrower)
+                        .AsNoTracking();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                books = books.Where(b => b.Name.Contains(searchString));
+            }
+
+            if (!String.IsNullOrEmpty(catChoice))
+            {
+                if (catChoice.StartsWith("A"))
+                {
+                    books = books.Where(b => b.BorrowerId==null);
+                }
+                else if (catChoice.StartsWith("U"))
+                {
+                    books = books.Where(b => b.BorrowerId!=null);
+                }
+            }
+
+            return View(await books.ToListAsync());
         }
 
         // GET: Books/Details/5
