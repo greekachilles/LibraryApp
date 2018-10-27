@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using LibraryApp.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using LibraryApp.Models;
 
 namespace LibraryApp
 {
@@ -34,11 +35,12 @@ namespace LibraryApp
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+            var connection = "Server=(localdb)\\mssqllocaldb;Database=LibraryApplicationDB;Trusted_Connection=True;ConnectRetryCount=0";
+
+            services.AddDbContext<LibraryApplicationDBContext>(options =>
+                options.UseSqlServer(connection));
             services.AddDefaultIdentity<IdentityUser>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<LibraryApplicationDBContext>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
