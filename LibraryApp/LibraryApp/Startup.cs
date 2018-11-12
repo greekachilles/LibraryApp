@@ -9,10 +9,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using LibraryApp.Data;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using LibraryApp.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace LibraryApp
 {
@@ -38,11 +40,21 @@ namespace LibraryApp
             var connection = "Server=(localdb)\\mssqllocaldb;Database=LibraryApplicationDB;Trusted_Connection=True;ConnectRetryCount=0";
 
             services.AddDbContext<LibraryApplicationDBContext>(options =>
-                options.UseSqlServer(connection));
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddEntityFrameworkStores<LibraryApplicationDBContext>();
+                options.UseSqlServer(connection))
+                .AddDbContext<LibraryAppContext>(options => options.UseSqlServer(connection));
+            services.AddDefaultIdentity<IdentityUser>().AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<LibraryAppContext>()
+                .AddDefaultTokenProviders();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc(
+                config =>
+                {
+                    var policy = new AuthorizationPolicyBuilder().
+                    RequireAuthenticatedUser()
+                    .Build();
+                    config.Filters.Add(new AuthorizeFilter(policy));
+                    }
+                ).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -71,6 +83,10 @@ namespace LibraryApp
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+           
+
+
         }
     }
 }

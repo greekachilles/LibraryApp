@@ -46,6 +46,52 @@ namespace LibraryApp.Models
 
                 entity.Property(e => e.Phone).HasMaxLength(30);
             });
+
+
+            modelBuilder.Entity<Book>().HasData(
+               new Book()
+               {
+                   BookId = 1,
+                   Author = "Mary-Jane Smith",
+                   Name = "My First Book",
+                   Year = 2008
+               },
+               new Book()
+               {
+                   BookId = 2,
+                   Author = "Mary-Jane Smith",
+                   Name = "A Science Book",
+                   Year = 2010
+               },
+               new Book()
+               {
+                   BookId = 3,
+                   Author = "John Doe",
+                   Name = "Classics Revisited",
+                   Year = 2015
+               }
+
+               );
+
+
+            modelBuilder.Entity<Borrower>().HasData(
+                new Borrower()
+                {
+                    Id=1,
+                    Name = "Kelly Potts",
+                    Age = 15,
+                    Phone = "222-333-444"
+                },
+                new Borrower()
+                {
+                    Id=2,
+                    Name = "Mike Smith",
+                    Age = 36,
+                    Phone="444-555-666"
+                }
+
+
+                );
         }
     }
 }

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace LibraryApp.Data.Migrations
+namespace LibraryApp.Migrations.LibraryApp
 {
     public partial class CreateIdentitySchema : Migration
     {
