@@ -4,14 +4,16 @@ using LibraryApp.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace LibraryApp.Migrations.LibraryApp
+namespace LibraryApp.Migrations
 {
     [DbContext(typeof(LibraryAppContext))]
-    partial class LibraryAppContextModelSnapshot : ModelSnapshot
+    [Migration("20181112101124_newSeedData")]
+    partial class newSeedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,11 +71,7 @@ namespace LibraryApp.Migrations.LibraryApp
                     b.Property<string>("Phone")
                         .HasMaxLength(30);
 
-                    b.Property<int?>("bookNavBookId");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("bookNavBookId");
 
                     b.ToTable("Borrower");
 
@@ -254,13 +252,6 @@ namespace LibraryApp.Migrations.LibraryApp
                         .WithMany("Book")
                         .HasForeignKey("BorrowerId")
                         .HasConstraintName("FK_Book_Borrower");
-                });
-
-            modelBuilder.Entity("LibraryApp.Models.Borrower", b =>
-                {
-                    b.HasOne("LibraryApp.Models.Book", "bookNav")
-                        .WithMany()
-                        .HasForeignKey("bookNavBookId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

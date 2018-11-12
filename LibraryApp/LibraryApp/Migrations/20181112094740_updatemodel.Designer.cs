@@ -4,14 +4,16 @@ using LibraryApp.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace LibraryApp.Migrations.LibraryApp
+namespace LibraryApp.Migrations
 {
     [DbContext(typeof(LibraryAppContext))]
-    partial class LibraryAppContextModelSnapshot : ModelSnapshot
+    [Migration("20181112094740_updatemodel")]
+    partial class updatemodel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,11 +48,7 @@ namespace LibraryApp.Migrations.LibraryApp
                     b.HasData(
                         new { BookId = 1, Author = "Mary-Jane Smith", Name = "My First Book", Year = 2008 },
                         new { BookId = 2, Author = "Mary-Jane Smith", Name = "A Science Book", Year = 2010 },
-                        new { BookId = 3, Author = "John Doe", Name = "Classics Revisited", Year = 2015 },
-                        new { BookId = 4, Author = "Melissa Meyers", Name = "Radiant Shadows", Year = 2012 },
-                        new { BookId = 5, Author = "City of Sins", Name = "Daniel Blake", Year = 2008 },
-                        new { BookId = 6, Author = "Patricia Cornwell", Name = "Point of Origin", Year = 2015 },
-                        new { BookId = 7, Author = "Rachel Caine", Name = "Chill Factor", Year = 2007 }
+                        new { BookId = 3, Author = "John Doe", Name = "Classics Revisited", Year = 2015 }
                     );
                 });
 
@@ -69,21 +67,13 @@ namespace LibraryApp.Migrations.LibraryApp
                     b.Property<string>("Phone")
                         .HasMaxLength(30);
 
-                    b.Property<int?>("bookNavBookId");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("bookNavBookId");
 
                     b.ToTable("Borrower");
 
                     b.HasData(
                         new { Id = 1, Age = 15, Name = "Kelly Potts", Phone = "222-333-444" },
-                        new { Id = 2, Age = 36, Name = "Mike Smith", Phone = "444-555-666" },
-                        new { Id = 3, Age = 19, Name = "James Brooks", Phone = "123-456-789" },
-                        new { Id = 4, Age = 23, Name = "Jeremy Michaels", Phone = "999-888-777" },
-                        new { Id = 5, Age = 19, Name = "Jessica Dwyer", Phone = "455-566-677" },
-                        new { Id = 6, Age = 21, Name = "Marcos Pauls", Phone = "122-333-444" }
+                        new { Id = 2, Age = 36, Name = "Mike Smith", Phone = "444-555-666" }
                     );
                 });
 
@@ -254,13 +244,6 @@ namespace LibraryApp.Migrations.LibraryApp
                         .WithMany("Book")
                         .HasForeignKey("BorrowerId")
                         .HasConstraintName("FK_Book_Borrower");
-                });
-
-            modelBuilder.Entity("LibraryApp.Models.Borrower", b =>
-                {
-                    b.HasOne("LibraryApp.Models.Book", "bookNav")
-                        .WithMany()
-                        .HasForeignKey("bookNavBookId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

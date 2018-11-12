@@ -36,7 +36,8 @@
                     <li><a asp-area="" asp-controller="Books" asp-action="Index">Books</a></li>
                     <li><a asp-area="" asp-controller="Borrowers" asp-action="Index">Borrowers</a></li>
                 </ul>
-                <partial name="_LoginPartial" />
+                @await  Html.PartialAsync("_LoginPartial")
+                @await  Html.PartialAsync("_AdminActionsPartial")
             </div>
         </div>
     </nav>

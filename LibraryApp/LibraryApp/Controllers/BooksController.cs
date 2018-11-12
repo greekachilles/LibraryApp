@@ -11,9 +11,9 @@ namespace LibraryApp.Controllers
 {
     public class BooksController : Controller
     {
-        private readonly LibraryApplicationDBContext _context;
+        private readonly LibraryAppContext _context;
 
-        public BooksController(LibraryApplicationDBContext context)
+        public BooksController(LibraryAppContext context)
         {
             _context = context;
         }
@@ -54,6 +54,18 @@ namespace LibraryApp.Controllers
                     books = books.Where(b => b.BorrowerId!=null);
                 }
             }
+
+            return View(await books.ToListAsync());
+        }
+
+
+        public async Task<IActionResult> Checkout()
+        {
+            var books = _context.Book
+                       .Include(b => b.Borrower)
+                       .AsNoTracking();
+
+            books = books.Where(b => b.BorrowerId==null);
 
             return View(await books.ToListAsync());
         }

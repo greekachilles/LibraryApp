@@ -13,26 +13,9 @@
 
 <h2>Index</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 
-<form asp-action="Index" method="get">
-    <div class="form-actions no-color">
-        <p>
-            Find by name: <input type="text" name="SearchString" value="@ViewData["currentFilter"]" />
-            <input type="submit" value="Search" class="btn btn-default" />
 
-        </p>
-        Sort by availability:
-        <select name="catChoice" asp-items="ViewBag.avail"></select>
-        <input type="submit" value="Filter" class="btn btn-default" />
-        <br />
 
-        <a asp-action="Index">Back to Full List</a>
-        <a asp-action="Checkout">Check out a book</a>
-    </div>
-</form>
 
 
 
@@ -80,7 +63,7 @@
                     }
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.BookId">Edit</a> 
+                    <a asp-action="Edit" asp-route-id="@item.BookId">Edit</a>
                     @if (signInManager.IsSignedIn(User))
                     {
                         var currentUser = await userManager.GetUserAsync(User);

@@ -18,23 +18,30 @@ namespace LibraryApp
         {
             //   CreateWebHostBuilder(args).Build().Run();
             var host = BuildWebHost(args);
+            InitializeDatabase(host);
+            host.Run();
 
+           
+        }
+
+        private static void InitializeDatabase(IWebHost host)
+        {
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
+
                 try
                 {
-                    var serviceProvider = services.GetRequiredService<IServiceProvider>();
-                    var config = services.GetRequiredService<IConfiguration>();
-                    Seed.CreateRoles(serviceProvider, config).Wait();
+                    SeedData.InitAsync(services).Wait();
                 }
-                catch (Exception exception)
+                catch (Exception ex)
                 {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(exception, "An error occured while creating roles");
+                    var logger = services
+                        .GetRequiredService<ILogger<Program>>();
+
+                    logger.LogError(ex, "Error occured seeding the DB");
                 }
             }
-            host.Run();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>

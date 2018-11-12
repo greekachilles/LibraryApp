@@ -39,22 +39,19 @@ namespace LibraryApp
 
             var connection = "Server=(localdb)\\mssqllocaldb;Database=LibraryApplicationDB;Trusted_Connection=True;ConnectRetryCount=0";
 
-            services.AddDbContext<LibraryApplicationDBContext>(options =>
+            services.AddDbContext<LibraryAppContext>(options =>
                 options.UseSqlServer(connection))
                 .AddDbContext<LibraryAppContext>(options => options.UseSqlServer(connection));
-            services.AddDefaultIdentity<IdentityUser>().AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<LibraryAppContext>()
-                .AddDefaultTokenProviders();
+            services.AddIdentity<IdentityUser, IdentityRole>()
+         .AddRoleManager<RoleManager<IdentityRole>>()
+         .AddDefaultUI()
+         .AddDefaultTokenProviders()
+         .AddEntityFrameworkStores<LibraryAppContext>();
 
             services.AddMvc(
-                config =>
-                {
-                    var policy = new AuthorizationPolicyBuilder().
-                    RequireAuthenticatedUser()
-                    .Build();
-                    config.Filters.Add(new AuthorizeFilter(policy));
-                    }
+             
                 ).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

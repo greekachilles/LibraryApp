@@ -16,5 +16,8 @@ namespace LibraryApp.Models
         public string Phone { get; set; }
 
         public ICollection<Book> Book { get; set; }
+
+        public Book bookNav { get; set; }
+
     }
 }
