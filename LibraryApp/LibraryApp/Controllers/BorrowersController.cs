@@ -19,10 +19,15 @@ namespace LibraryApp.Controllers
             _context = context;
         }
 
+        [Authorize(Roles ="Admin")]
         // GET: Borrowers
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Borrower.ToListAsync());
+            var borrower = _context.Borrower
+                       .Include(b => b.Book)
+                       .AsNoTracking();
+
+            return View(await borrower.ToListAsync());
         }
 
         // GET: Borrowers/Details/5

@@ -13,9 +13,7 @@
 
 <h2>Index</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+
 
 <form asp-action="Index" method="get">
     <div class="form-actions no-color">
@@ -29,8 +27,22 @@
         <input type="submit" value="Filter" class="btn btn-default" />
         <br />
 
-        <a asp-action="Index">Back to Full List</a>
-        <a asp-action="Checkout">Check out a book</a>
+        <p><a asp-action="Index">Back to Full List</a></p>
+        @if (signInManager.IsSignedIn(User))
+        {
+            var currentUser = await userManager.GetUserAsync(User);
+            var isAdmin = currentUser != null
+                && await userManager.IsInRoleAsync(
+                    currentUser, Constants.AdminRole);
+
+            if (isAdmin)
+            {
+                <p><a asp-action="Checkout">Check out a book</a></p>
+                <p>
+                    <a asp-action="Create">Add new book</a>
+                </p>
+            }
+        }
     </div>
 </form>
 
@@ -51,56 +63,69 @@
             <th>
                 Available
             </th>
-            <th></th>
-        </tr>
+            @if (signInManager.IsSignedIn(User))
+            {
+                var currentUser = await userManager.GetUserAsync(User);
+                var isAdmin = currentUser != null
+                    && await userManager.IsInRoleAsync(
+                        currentUser, Constants.AdminRole);
+
+                if (isAdmin)
+                {
+                    <th></th>
+                }
+            }
+                </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Author)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Year)
-                </td>
-                <td>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Year)
+            </td>
+            <td>
 
 
-                    @if (item.BorrowerId == null)
-                    {
-                        <p>Yes</p>
-                    }
-                    else
-                    {
-                        <p>No</p>
-                    }
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.BookId">Edit</a> 
-                    @if (signInManager.IsSignedIn(User))
-                    {
-                        var currentUser = await userManager.GetUserAsync(User);
-                        var isAdmin = currentUser != null
-                            && await userManager.IsInRoleAsync(
-                                currentUser, Constants.AdminRole);
+                @if (item.BorrowerId == null)
+                {
+                    <p>Yes</p>
+                }
+                else
+                {
+                    <p>No</p>
+                }
+            </td>
 
-                        if (isAdmin)
-                        {
-                            @HtmlEncoder.Encode("|")
-                            <a asp-action="Details" asp-route-id="@item.BookId">Details</a>
-                            @HtmlEncoder.Encode("|")
-                            <a asp-action="Delete" ifp-route-id="@item.BookId">Delete</a>
 
+            @if (signInManager.IsSignedIn(User))
+            {
+                var currentUser = await userManager.GetUserAsync(User);
+                var isAdmin = currentUser != null
+                    && await userManager.IsInRoleAsync(
+                        currentUser, Constants.AdminRole);
+
+                if (isAdmin)
+                {
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.BookId">Edit</a>
+                @HtmlEncoder.Encode("|")
+                <a asp-action="Details" asp-route-id="@item.BookId">Details</a>
+                @HtmlEncoder.Encode("|")
+                <a asp-action="Delete" ifp-route-id="@item.BookId">Delete</a>
+            </td>
 
 
                         }
-                    }
-                </td>
-            </tr>
+                        }
+                    
+                </tr>
         }
     </tbody>
 </table>

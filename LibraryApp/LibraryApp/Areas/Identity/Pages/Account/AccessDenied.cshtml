@@ -4,7 +4,21 @@
     ViewData["Title"] = "Access denied";
 }
 
+@inject SignInManager<IdentityUser> signInManager
+@inject UserManager<IdentityUser> userManager
+
 <header>
     <h1 class="text-danger">@ViewData["Title"]</h1>
-    <p class="text-danger">You do not have access to this resource.</p>
+
+    @if (signInManager.IsSignedIn(User))
+    {
+        var currentUser = await userManager.GetUserAsync(User);
+        <p class="text-danger">Restricted data. Admin access only.</p>
+    }
+    else
+    {
+        <p class="text-danger">You do not have access to this resource. Please sign in with a local account.</p>
+    }
+
+
 </header>

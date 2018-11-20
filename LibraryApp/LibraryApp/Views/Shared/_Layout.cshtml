@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using LibraryApp.Models
+
+@inject SignInManager<IdentityUser> signInManager
+@inject UserManager<IdentityUser> userManager
+
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -33,11 +40,23 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                    <li><a asp-area="" asp-controller="Books" asp-action="Index">Books</a></li>
-                    <li><a asp-area="" asp-controller="Borrowers" asp-action="Index">Borrowers</a></li>
+
+                    @if (signInManager.IsSignedIn(User))
+                    {
+                        <li><a asp-area="" asp-controller="Books" asp-action="Index">Books</a></li>
+                        var currentUser = await userManager.GetUserAsync(User);
+                        var isAdmin = currentUser != null
+                            && await userManager.IsInRoleAsync(
+                                currentUser, Constants.AdminRole);
+
+                        if (isAdmin)
+                        {
+                            <li><a asp-area="" asp-controller="Borrowers" asp-action="Index">Borrowers</a></li>
+                        }
+                    }
                 </ul>
-                @await  Html.PartialAsync("_LoginPartial")
-                @await  Html.PartialAsync("_AdminActionsPartial")
+                @await Html.PartialAsync("_LoginPartial")
+                @await Html.PartialAsync("_AdminActionsPartial")
             </div>
         </div>
     </nav>

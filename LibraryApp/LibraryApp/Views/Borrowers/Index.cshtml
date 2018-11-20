@@ -27,6 +27,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Phone)
             </th>
+            <th>Number of books checked out</th>
             <th></th>
         </tr>
     </thead>
@@ -44,25 +45,29 @@
                     @Html.DisplayFor(modelItem => item.Phone)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                    @if (signInManager.IsSignedIn(User))
-                    {
-                        var currentUser = await userManager.GetUserAsync(User);
-                        var isAdmin = currentUser != null
-                            && await userManager.IsInRoleAsync(
-                                currentUser, Constants.AdminRole);
+                    
+                    @{
+                        int counter = 0;
 
-                        if (isAdmin)
+                        foreach (var b in item.Book)
                         {
-                            @HtmlEncoder.Encode("|")
+                            counter = counter + 1;
+                        }
+                        }
+                    @Html.Encode(counter)
+                </td>
+
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+
+                           |
                             <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                            @HtmlEncoder.Encode("|")
+                           |
                             <a asp-action="Delete" ifp-route-id="@item.Id">Delete</a>
 
 
 
-                        }
-                    }
+                       
 
 
 
