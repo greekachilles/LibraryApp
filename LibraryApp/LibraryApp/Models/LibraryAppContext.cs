@@ -42,7 +42,8 @@ namespace LibraryApp.Models
                     entity.HasOne(d => d.Borrower)
                         .WithMany(p => p.Book)
                         .HasForeignKey(d => d.BorrowerId)
-                        .HasConstraintName("FK_Book_Borrower");
+                        .HasConstraintName("FK_Book_Borrower")
+                        .OnDelete(DeleteBehavior.SetNull);
                 });
 
                 modelBuilder.Entity<Borrower>(entity =>

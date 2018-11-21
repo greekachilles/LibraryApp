@@ -1,89 +1,47 @@
-﻿@model IEnumerable<LibraryApp.Models.Book>
-
-@using Microsoft.AspNetCore.Identity
-@using LibraryApp.Models
-
-@inject SignInManager<IdentityUser> signInManager
-@inject UserManager<IdentityUser> userManager
-
+﻿@model LibraryApp.Models.Book
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Checkout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<h2>Checkout</h2>
 
+<h4>Book</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Checkout">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="BookId" />
+           
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label><br />
+                @Html.DisplayFor(model => model.Name)
+                
+            </div>
+            <div class="form-group">
+                <label asp-for="Author" class="control-label"></label><br />
+                @Html.DisplayFor(model => model.Author)
 
+            </div>
+            <div class="form-group">
+                <label asp-for="Year" class="control-label"></label><br />
+                @Html.DisplayFor(model => model.Year)
+            </div>
+            <div class="form-group">
+                <label asp-for="BorrowerId" class="control-label"></label>
+                <select asp-for="BorrowerId" class="form-control" asp-items="ViewBag.BorrowerId"></select>
+                <span asp-validation-for="BorrowerId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
 
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
 
-
-
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Author)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Year)
-            </th>
-            <th>
-                Available
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Author)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Year)
-                </td>
-                <td>
-
-
-                    @if (item.BorrowerId == null)
-                    {
-                        <p>Yes</p>
-                    }
-                    else
-                    {
-                        <p>No</p>
-                    }
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.BookId">Edit</a>
-                    @if (signInManager.IsSignedIn(User))
-                    {
-                        var currentUser = await userManager.GetUserAsync(User);
-                        var isAdmin = currentUser != null
-                            && await userManager.IsInRoleAsync(
-                                currentUser, Constants.AdminRole);
-
-                        if (isAdmin)
-                        {
-                            @HtmlEncoder.Encode("|")
-                            <a asp-action="Details" asp-route-id="@item.BookId">Details</a>
-                            @HtmlEncoder.Encode("|")
-                            <a asp-action="Delete" ifp-route-id="@item.BookId">Delete</a>
-
-
-
-                        }
-                    }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>

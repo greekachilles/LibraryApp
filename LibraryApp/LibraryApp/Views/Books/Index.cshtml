@@ -37,7 +37,7 @@
 
             if (isAdmin)
             {
-                <p><a asp-action="Checkout">Check out a book</a></p>
+                
                 <p>
                     <a asp-action="Create">Add new book</a>
                 </p>
@@ -114,11 +114,12 @@
                 if (isAdmin)
                 {
             <td>
+                <a asp-action="Checkout" asp-route-id="@item.BookId">Checkout Book</a><br />
                 <a asp-action="Edit" asp-route-id="@item.BookId">Edit</a>
                 @HtmlEncoder.Encode("|")
                 <a asp-action="Details" asp-route-id="@item.BookId">Details</a>
                 @HtmlEncoder.Encode("|")
-                <a asp-action="Delete" ifp-route-id="@item.BookId">Delete</a>
+                <a asp-action="Delete" asp-route-id="@item.BookId">Delete</a>
             </td>
 
 
