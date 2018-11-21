@@ -17,16 +17,19 @@
            
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label><br />
+                <input type="hidden" asp-for="Name" />
                 @Html.DisplayFor(model => model.Name)
-                
+
             </div>
             <div class="form-group">
                 <label asp-for="Author" class="control-label"></label><br />
+                <input type="hidden" asp-for="Author" />
                 @Html.DisplayFor(model => model.Author)
 
             </div>
             <div class="form-group">
                 <label asp-for="Year" class="control-label"></label><br />
+                <input type="hidden" asp-for="Year" />
                 @Html.DisplayFor(model => model.Year)
             </div>
             <div class="form-group">

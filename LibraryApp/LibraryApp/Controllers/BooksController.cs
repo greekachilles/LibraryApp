@@ -191,7 +191,39 @@ namespace LibraryApp.Controllers
         }
 
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Checkout(int id, [Bind("BookId,Name,Author,Year,BorrowerId")] Book book)
+        {
+            if (id != book.BookId)
+            {
+                return NotFound();
+            }
 
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(book);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!BookExists(book.BookId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["BorrowerId"] = new SelectList(_context.Borrower, "Id", "Name", book.BorrowerId);
+            return View(book);
+        }
 
         // GET: Books/Edit/5
         [Authorize(Roles = "Admin")]
