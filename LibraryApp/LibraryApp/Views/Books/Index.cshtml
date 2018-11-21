@@ -51,6 +51,20 @@
 <table class="table">
     <thead>
         <tr>
+            @if (signInManager.IsSignedIn(User))
+            {
+                var currentUser = await userManager.GetUserAsync(User);
+                var isAdmin = currentUser != null
+                    && await userManager.IsInRoleAsync(
+                        currentUser, Constants.AdminRole);
+
+                if (isAdmin)
+                {
+
+                    <th></th>
+                    <th></th>
+                }
+            }
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
@@ -73,15 +87,61 @@
                 if (isAdmin)
                 {
                     <th></th>
+
                 }
             }
-                </tr>
+        </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
         <tr>
+            @if (signInManager.IsSignedIn(User))
+            {
+                var currentUser = await userManager.GetUserAsync(User);
+                var isAdmin = currentUser != null
+                    && await userManager.IsInRoleAsync(
+                        currentUser, Constants.AdminRole);
+
+                if (isAdmin)
+                {
+
+
+                    <td>
+                        <a asp-action="Checkout" asp-route-id="@item.BookId" style="text-decoration:none">
+                            @if (item.BorrowerId == null)
+                            {
+                                <button id="checkout" class="btn btn-default">Checkout</button>
+                            }
+                            else
+                            {
+                                <button id="checkout" class="btn btn-default" disabled="disabled">Checkout</button>
+                            }
+
+
+                        </a><br />
+                    </td>
+
+                    <td>
+                        <a asp-action="Return" asp-route-id="@item.BookId" style="text-decoration:none">
+                            @if (item.BorrowerId != null)
+                            {
+                                <button id="return" class="btn btn-default">Return</button>
+                            }
+                            else
+                            {
+                                <button id="return" class="btn btn-default" disabled="disabled">Return</button>
+                            }
+
+
+                        </a><br />
+                    </td>
+
+
+                }
+            }
             <td>
+
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
@@ -113,20 +173,21 @@
 
                 if (isAdmin)
                 {
-            <td>
-                <a asp-action="Checkout" asp-route-id="@item.BookId">Checkout Book</a><br />
-                <a asp-action="Edit" asp-route-id="@item.BookId">Edit</a>
-                @HtmlEncoder.Encode("|")
-                <a asp-action="Details" asp-route-id="@item.BookId">Details</a>
-                @HtmlEncoder.Encode("|")
-                <a asp-action="Delete" asp-route-id="@item.BookId">Delete</a>
-            </td>
+                    <td>
+
+                        <a asp-action="Edit" asp-route-id="@item.BookId">Edit</a>
+                        @HtmlEncoder.Encode("|")
+                        <a asp-action="Details" asp-route-id="@item.BookId">Details</a>
+                        @HtmlEncoder.Encode("|")
+                        <a asp-action="Delete" asp-route-id="@item.BookId">Delete</a>
+                    </td>
 
 
-                        }
-                        }
-                    
-                </tr>
+
+                }
+            }
+
+        </tr>
         }
     </tbody>
 </table>

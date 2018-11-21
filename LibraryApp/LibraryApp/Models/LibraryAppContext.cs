@@ -89,8 +89,8 @@ namespace LibraryApp.Models
                    new Book()
                    {
                        BookId = 5,
-                       Author = "City of Sins",
-                       Name = "Daniel Blake",
+                       Author = "Daniel Blake",
+                       Name = "City of Sins",
                        Year = 2008
                    },
                    new Book()

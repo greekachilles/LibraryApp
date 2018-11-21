@@ -62,70 +62,10 @@ namespace LibraryApp.Controllers
             return View(await books.ToListAsync());
         }
 
-  /*      // GET: Books/Checkout
-        [Authorize(Roles = "Admin")]
-        public IActionResult Checkout()
-        {
-            var books =  _context.Book
-                       .Include(b => b.Borrower)
-                       .AsNoTracking();
-
-            books = books.Where(b => b.BorrowerId==null);
-
-            var borrowers = _context.Borrower
-                .AsNoTracking();
-
-            ViewData["avail"] = new SelectList(books, "BookId", "Name");
-            ViewData["borrowers"] = new SelectList(borrowers, "Id", "Name");
-          
-
-            return View();
-        } */
-
-
-        // POST: Books/Checkout
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-   /*     [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Checkout(int? bookId, int? borrowerId)
-        {
-            if (bookId == null || borrowerId ==null) {
-                return NotFound();
-            }
-
-            var bookToUpdate = await _context.Book.SingleOrDefaultAsync(b => b.BookId == bookId);
+  
 
 
 
-            if (bookToUpdate != null)
-            {
-                bookToUpdate.BorrowerId = borrowerId;
-                if (ModelState.IsValid)
-                {
-                    try
-                    {
-                        _context.Update(bookToUpdate);
-                        await _context.SaveChangesAsync();
-                    }
-                    catch (DbUpdateConcurrencyException)
-                    {
-                        if (!BookExists(bookToUpdate.BookId))
-                        {
-                            return NotFound();
-                        }
-                        else
-                        {
-                            throw;
-                        }
-                    }
-                    return RedirectToAction(nameof(Index));
-                }
-            }
-
-            return View(bookToUpdate);
-        }*/
 
         // GET: Books/Details/5
         [Authorize(Roles = "Admin")]
@@ -239,7 +179,7 @@ namespace LibraryApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["BorrowerId"] = new SelectList(_context.Borrower, "Id", "Name", book.BorrowerId);
+            
             return View(book);
         }
 
@@ -311,6 +251,67 @@ namespace LibraryApp.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+
+
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Return(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var book = await _context.Book
+                .Include(b => b.Borrower)
+                .FirstOrDefaultAsync(m => m.BookId == id);
+
+            if (book == null)
+            {
+                return NotFound();
+            }
+            
+            return View(book);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Return(int id, [Bind("BookId,Name,Author,Year,BorrowerId")] Book returnbook)
+        {
+            if (id != returnbook.BookId)
+            {
+                return NotFound();
+            }
+
+            returnbook.BorrowerId = null;
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(returnbook);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!BookExists(returnbook.BookId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+               
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
 
         private bool BookExists(int id)
         {

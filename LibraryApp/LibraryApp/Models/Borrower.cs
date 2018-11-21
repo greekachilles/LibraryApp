@@ -20,6 +20,7 @@ namespace LibraryApp.Models
         [RegularExpression(@"^[0-9-]{11}$", ErrorMessage = "Please enter a phone number in the format XXX-XXX-XXX")]
         public string Phone { get; set; }
 
+        [Display(Name="Books")]
         public ICollection<Book> Book { get; set; }
 
         public Book bookNav { get; set; }
