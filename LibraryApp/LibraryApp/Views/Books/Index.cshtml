@@ -1,4 +1,4 @@
-﻿@model IEnumerable<LibraryApp.Models.Book>
+﻿@model PaginatedList<LibraryApp.Models.Book>
 
 @using Microsoft.AspNetCore.Identity
 @using LibraryApp.Models
@@ -18,14 +18,12 @@
 <form asp-action="Index" method="get">
     <div class="form-actions no-color">
         <p>
-            Find by name: <input type="text" name="SearchString" value="@ViewData["currentFilter"]" />
+            Find by name: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
 
 
         </p>
-        Sort by availability:
-        <select name="catChoice" asp-items="ViewBag.avail"></select>
-
-        <br />
+       
+       
         <input type="submit" value="Go" class="btn btn-default" />
 
         <p><a asp-action="Index">Back to Full List</a></p>
@@ -67,16 +65,16 @@
                 }
             }
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Book Title</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Author)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["AuthorSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Author</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Year)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["YearSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Year</a>
             </th>
             <th>
-                Available
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["AvailSortParam"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Available</a>
             </th>
             @if (signInManager.IsSignedIn(User))
             {
@@ -96,99 +94,124 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            @if (signInManager.IsSignedIn(User))
-            {
-                var currentUser = await userManager.GetUserAsync(User);
-                var isAdmin = currentUser != null
-                    && await userManager.IsInRoleAsync(
-                        currentUser, Constants.AdminRole);
-
-                if (isAdmin)
+            <tr>
+                @if (signInManager.IsSignedIn(User))
                 {
+                    var currentUser = await userManager.GetUserAsync(User);
+                    var isAdmin = currentUser != null
+                        && await userManager.IsInRoleAsync(
+                            currentUser, Constants.AdminRole);
+
+                    if (isAdmin)
+                    {
 
 
-                    <td>
-                        <a asp-action="Checkout" asp-route-id="@item.BookId" style="text-decoration:none">
-                            @if (item.BorrowerId == null)
-                            {
-                                <button id="checkout" class="btn btn-default">Checkout</button>
-                            }
-                            else
-                            {
-                                <button id="checkout" class="btn btn-default" disabled="disabled">Checkout</button>
-                            }
+                        <td>
+                            <a asp-action="Checkout" asp-route-id="@item.BookId" style="text-decoration:none">
+                                @if (item.BorrowerId == null)
+                                {
+                                    <button id="checkout" class="btn btn-default">Checkout</button>
+                                }
+                                else
+                                {
+                                    <button id="checkout" class="btn btn-default" disabled="disabled">Checkout</button>
+                                }
 
 
-                        </a><br />
-                    </td>
+                            </a><br />
+                        </td>
 
-                    <td>
-                        <a asp-action="Return" asp-route-id="@item.BookId" style="text-decoration:none">
-                            @if (item.BorrowerId != null)
-                            {
-                                <button id="return" class="btn btn-default">Return</button>
-                            }
-                            else
-                            {
-                                <button id="return" class="btn btn-default" disabled="disabled">Return</button>
-                            }
-
-
-                        </a><br />
-                    </td>
+                        <td>
+                            <a asp-action="Return" asp-route-id="@item.BookId" style="text-decoration:none">
+                                @if (item.BorrowerId != null)
+                                {
+                                    <button id="return" class="btn btn-default">Return</button>
+                                }
+                                else
+                                {
+                                    <button id="return" class="btn btn-default" disabled="disabled">Return</button>
+                                }
 
 
+                            </a><br />
+                        </td>
+
+
+                    }
                 }
-            }
-            <td>
+                <td>
 
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Author)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Year)
-            </td>
-            <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Author)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Year)
+                </td>
+                <td>
 
 
-                @if (item.BorrowerId == null)
+                    @if (item.BorrowerId == null)
+                    {
+                        <p>Yes</p>
+                    }
+                    else
+                    {
+                        <p>No</p>
+                    }
+                </td>
+
+
+                @if (signInManager.IsSignedIn(User))
                 {
-                    <p>Yes</p>
+                    var currentUser = await userManager.GetUserAsync(User);
+                    var isAdmin = currentUser != null
+                        && await userManager.IsInRoleAsync(
+                            currentUser, Constants.AdminRole);
+
+                    if (isAdmin)
+                    {
+                        <td>
+
+                            <a asp-action="Edit" asp-route-id="@item.BookId">Edit</a>
+                            @HtmlEncoder.Encode("|")
+                            <a asp-action="Details" asp-route-id="@item.BookId">Details</a>
+                            @HtmlEncoder.Encode("|")
+                            <a asp-action="Delete" asp-route-id="@item.BookId">Delete</a>
+                        </td>
+
+
+
+                    }
                 }
-                else
-                {
-                    <p>No</p>
-                }
-            </td>
 
-
-            @if (signInManager.IsSignedIn(User))
-            {
-                var currentUser = await userManager.GetUserAsync(User);
-                var isAdmin = currentUser != null
-                    && await userManager.IsInRoleAsync(
-                        currentUser, Constants.AdminRole);
-
-                if (isAdmin)
-                {
-                    <td>
-
-                        <a asp-action="Edit" asp-route-id="@item.BookId">Edit</a>
-                        @HtmlEncoder.Encode("|")
-                        <a asp-action="Details" asp-route-id="@item.BookId">Details</a>
-                        @HtmlEncoder.Encode("|")
-                        <a asp-action="Delete" asp-route-id="@item.BookId">Delete</a>
-                    </td>
-
-
-
-                }
-            }
-
-        </tr>
+            </tr>
         }
     </tbody>
 </table>
+
+
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-page="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+asp-route-currentCatChoice="@ViewData["CatChoice"]"
+   class="btn btn-default @prevDisabled">
+    Previous
+</a>
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+asp-route-currentCatChoice="@ViewData["CatChoice"]"
+   asp-route-page="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+
+   class="btn btn-default @nextDisabled">
+    Next
+</a>

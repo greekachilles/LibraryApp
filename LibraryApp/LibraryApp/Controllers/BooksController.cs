@@ -23,43 +23,75 @@ namespace LibraryApp.Controllers
         
 
         // GET: Books
-        public async Task<IActionResult> Index(string searchString, string catChoice)
+        public async Task<IActionResult> Index(string searchString, string catChoice, string sortOrder, string currentFilter, int? page, string currentCatChoice)
 
         {
+            ViewData["CurrentSort"] = sortOrder;
+            
+            
+            ViewData["NameSortParam"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["AuthorSortParam"] = String.IsNullOrEmpty(sortOrder) ? "author_asc" : "";
+            ViewData["YearSortParam"] = sortOrder == "Year" ? "year_desc" : "Year";
+            ViewData["AvailSortParam"] = String.IsNullOrEmpty(sortOrder) ? "avail" : "avail_desc";
+
+            if (searchString !=null)
+            {
+                page = 1;
+
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+           
+
             ViewData["CurrentFilter"] = searchString;
-
-
-            ViewBag.avail = new SelectList(new[]
-           {
-                new{id="",name="All books"},
-                new {id="A", name="Available books"},
-                new{id="U", name="Unavailable books"},
-            },
-           "id", "name", catChoice);
-
+          
 
             var books = _context.Book
                         .Include(b => b.Borrower)
                         .AsNoTracking();
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    books = books.OrderByDescending(b => b.Name);
+                    break;
+
+                case "Year":
+                    books = books.OrderBy(b => b.Year);
+                    break;
+
+                case "year_desc":
+                    books = books.OrderByDescending(b => b.Year);
+                    break;
+                case "author_asc":
+                    books = books.OrderBy(b => b.Author);
+                    break;
+
+                case "avail":
+                    books = books.OrderBy(b => b.BorrowerId);
+                    break;
+
+                case "avail_desc":
+                    books = books.OrderByDescending(b => b.BorrowerId);
+                    break;
+                default:
+                    books = books.OrderBy(b => b.Name);                    
+                    break;
+            }
 
             if (!String.IsNullOrEmpty(searchString))
             {
                 books = books.Where(b => b.Name.Contains(searchString) || b.Author.Contains(searchString));
             }
 
-            if (!String.IsNullOrEmpty(catChoice))
-            {
-                if (catChoice.StartsWith("A"))
-                {
-                    books = books.Where(b => b.BorrowerId==null);
-                }
-                else if (catChoice.StartsWith("U"))
-                {
-                    books = books.Where(b => b.BorrowerId!=null);
-                }
-            }
+           
+            int pageSize = 8;
+            return View(await PaginatedList<Book>.CreateAsync(books, page ?? 1, pageSize));
 
-            return View(await books.ToListAsync());
+          //  return View(await books.ToListAsync());
         }
 
   
