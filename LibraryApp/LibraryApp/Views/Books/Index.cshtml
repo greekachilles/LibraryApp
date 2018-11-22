@@ -8,10 +8,10 @@
 
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Books Index";
 }
 
-<h2>Index</h2>
+<h2>Books Index</h2>
 
 
 
@@ -19,13 +19,14 @@
     <div class="form-actions no-color">
         <p>
             Find by name: <input type="text" name="SearchString" value="@ViewData["currentFilter"]" />
-            <input type="submit" value="Search" class="btn btn-default" />
+
 
         </p>
         Sort by availability:
         <select name="catChoice" asp-items="ViewBag.avail"></select>
-        <input type="submit" value="Filter" class="btn btn-default" />
+
         <br />
+        <input type="submit" value="Go" class="btn btn-default" />
 
         <p><a asp-action="Index">Back to Full List</a></p>
         @if (signInManager.IsSignedIn(User))
@@ -37,7 +38,7 @@
 
             if (isAdmin)
             {
-                
+
                 <p>
                     <a asp-action="Create">Add new book</a>
                 </p>

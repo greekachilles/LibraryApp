@@ -44,7 +44,7 @@ namespace LibraryApp.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                books = books.Where(b => b.Name.Contains(searchString));
+                books = books.Where(b => b.Name.Contains(searchString) || b.Author.Contains(searchString));
             }
 
             if (!String.IsNullOrEmpty(catChoice))

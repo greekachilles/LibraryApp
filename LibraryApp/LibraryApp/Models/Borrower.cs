@@ -13,7 +13,7 @@ namespace LibraryApp.Models
 
         public int Id { get; set; }
         [Display(Name="Borrower Name")]
-        [RegularExpression(@"^[a-zA-Z''-'\s]+$", ErrorMessage = "Please only enter letters and apostrophes")]
+        [RegularExpression(@"^[a-zA-Z\-'\s]+$", ErrorMessage = "Please enter a valid author name. Accepted characters: A-Z, a-z, ', -")]
         public string Name { get; set; }
         [RegularExpression(@"^[0-9]{1,3}$", ErrorMessage = "Please enter a valid age")]
         public int? Age { get; set; }
