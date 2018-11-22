@@ -32,7 +32,7 @@ namespace LibraryApp.Controllers
             ViewData["NameSortParam"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewData["AuthorSortParam"] = String.IsNullOrEmpty(sortOrder) ? "author_asc" : "";
             ViewData["YearSortParam"] = sortOrder == "Year" ? "year_desc" : "Year";
-            ViewData["AvailSortParam"] = String.IsNullOrEmpty(sortOrder) ? "avail" : "avail_desc";
+            ViewData["AvailSortParam"] = sortOrder =="avail" ? "avail_desc" : "avail";
 
             if (searchString !=null)
             {

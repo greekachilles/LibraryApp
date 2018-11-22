@@ -32,16 +32,24 @@
             @Html.DisplayNameFor(model => model.Book)
         </dt>
         <dd>
-            @foreach (var b in Model.Book)
-            {
-                @Html.DisplayFor(modelItem => b.Name)
-                <a asp-area="" asp-controller="Books" asp-action="Return" asp-route-id="@b.BookId">Return book</a><br />
+            <table >
+                @foreach (var b in Model.Book)
+                {
+                <tr>
+                    <td style="padding-right:10px">
+                        @Html.DisplayFor(modelItem => b.Name)
+                            </td>
+                    
+                    <td>
+                        <a asp-area="" asp-controller="Books" asp-action="Return" asp-route-id="@b.BookId">Return Book</a></td>
+</tr>
                 }
-
+            </table>
             </dd>
     </dl>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-controller="Books" asp-action="Index">Books List</a> |
+    <a asp-controller="Borrowers" asp-action="Index">Borrower List</a>
 </div>

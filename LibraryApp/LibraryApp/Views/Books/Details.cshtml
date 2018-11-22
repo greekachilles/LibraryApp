@@ -32,11 +32,14 @@
             @Html.DisplayNameFor(model => model.Borrower)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Borrower.Name)
+            
+            @{var b = Model.BorrowerId;}
+            <a asp-area="" asp-controller="Borrowers" asp-action="Details" asp-route-id="@b">@Html.DisplayFor(model => model.Borrower.Name)</a>
         </dd>
     </dl>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.BookId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-controller="Books" asp-action="Index">Books List</a> |
+    <a asp-controller="Borrowers" asp-action="Index">Borrower List</a>
 </div>
